@@ -515,6 +515,17 @@
             color: #718096;
         }
 
+        /* Remove number input spinner arrows */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -1132,6 +1143,13 @@
         let isFirebaseReady = false;
         let unsubscribeListener = null;
 
+        function calculateOverallAverage(review) {
+            const categories = ['plot', 'characters', 'cast', 'cinematography', 'pacing', 'soundtrack', 'unpredictability', 'ending', 'rewatchability', 'menu'];
+            const sum = categories.reduce((total, category) => total + (parseInt(review[category]) || 0), 0);
+            const average = sum / categories.length;
+            return Math.round(average * 10) / 10; // Round to 1 decimal place
+        }
+
         // Firebase functions
         async function initializeFirebase() {
             try {
@@ -1390,6 +1408,8 @@
         function createReviewerInputs(movieId, reviewer, review) {
             const ratings = ['plot', 'characters', 'cast', 'cinematography', 'pacing', 'soundtrack', 'unpredictability', 'ending', 'rewatchability', 'menu'];
             
+            const overallAverage = calculateOverallAverage(review);
+            
             return `
                 ${ratings.map(rating => `
                     <div class="rating-row">
@@ -1402,8 +1422,9 @@
                 
                 <div class="overall-score">
                     Overall: <input type="number" min="0" max="10" 
-                                   value="${review.overall || 0}" 
-                                   onchange="updateRating(${movieId}, '${reviewer}', 'overall', this.value)">
+                                   value="${overallAverage}" 
+                                   disabled
+                                   style="cursor: not-allowed; opacity: 0.8;">
                 </div>
                 
                 <textarea class="summary-textarea" placeholder="Enter your summary..." 
@@ -1418,6 +1439,10 @@
                     movie.reviews[reviewer][field] = value;
                 } else {
                     movie.reviews[reviewer][field] = parseInt(value) || 0;
+                }
+                
+                if (field !== 'summary' && field !== 'overall') {
+                    movie.reviews[reviewer].overall = calculateOverallAverage(movie.reviews[reviewer]);
                 }
                 
                 // Auto-save to Firebase with debouncing
@@ -1515,6 +1540,19 @@
 
         window.addEventListener('firebaseLoaded', () => {
             initializeFirebase();
+        });
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Backspace' || e.keyCode === 8) {
+                const target = e.target;
+                const isInput = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT';
+                const isReadOnly = target.readOnly || target.disabled;
+                
+                // Only prevent default if not in an editable input field
+                if (!isInput || isReadOnly) {
+                    e.preventDefault();
+                }
+            }
         });
         
         renderMovies();
