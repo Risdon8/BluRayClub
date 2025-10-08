@@ -120,6 +120,9 @@
 
         .btn {
             /* Professional button styling */
+            /* Fixed hover effect positioning */
+            position: relative;
+            overflow: hidden;
             background: rgba(74, 85, 104, 0.4);
             color: #e2e8f0;
             border: 1px solid rgba(226, 232, 240, 0.15);
@@ -492,6 +495,7 @@
 
         .modal-content {
             /* Professional modal styling */
+            /* Improved mobile responsiveness */
             background: #2d3748;
             margin: 5% auto;
             padding: 40px;
@@ -501,6 +505,8 @@
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(226, 232, 240, 0.1);
             animation: modalSlideIn 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         .modal-content h2 {
@@ -708,6 +714,104 @@
             cursor: pointer;
         }
 
+        /* Remove hover effect from modal buttons */
+        .modal-content .btn::before {
+            display: none;
+        }
+        
+        /* Added Category Key modal styles */
+        .category-key-content {
+            background: #2d3748;
+            margin: 3% auto;
+            padding: 40px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 800px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(226, 232, 240, 0.1);
+            animation: modalSlideIn 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .category-key-content h2 {
+            color: #f7fafc;
+            margin-bottom: 28px;
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .category-item {
+            margin-bottom: 20px;
+            padding: 16px;
+            background: rgba(45, 55, 72, 0.5);
+            border-radius: 10px;
+            border-left: 3px solid #4a5568;
+        }
+
+        .category-name {
+            font-weight: 700;
+            color: #f7fafc;
+            font-size: 16px;
+            margin-bottom: 8px;
+            text-transform: capitalize;
+        }
+
+        .category-description {
+            color: #cbd5e0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Added button group for filters and category key */
+        .top-controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            background: rgba(45, 55, 72, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(226, 232, 240, 0.1);
+            border-radius: 12px;
+            padding: 16px 24px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .control-btn:hover {
+            background: rgba(45, 55, 72, 0.8);
+            border-color: rgba(226, 232, 240, 0.2);
+        }
+
+        .control-btn-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #e2e8f0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .control-btn-icon {
+            font-size: 20px;
+            color: #a0aec0;
+            transition: transform 0.3s ease;
+        }
+
+        .control-btn-icon.open {
+            transform: rotate(180deg);
+        }
+
+
         @media (max-width: 768px) {
             h1 {
                 font-size: 2.5rem;
@@ -730,6 +834,26 @@
 
             .btn {
                 width: 100%;
+            }
+
+            /* Improved mobile modal styling */
+            .modal-content, .category-key-content {
+                margin: 2% auto;
+                padding: 24px;
+                width: 95%;
+                max-height: 95vh;
+            }
+
+            .modal-content h2, .category-key-content h2 {
+                font-size: 22px;
+            }
+
+            .top-controls {
+                flex-direction: column;
+            }
+
+            .control-btn {
+                min-width: 100%;
             }
         }
 
@@ -790,10 +914,16 @@
                 </div>
             </div>
 
-            <!-- Collapsible filters section -->
-            <div class="filters-toggle" onclick="toggleFilters()">
-                <span class="filters-toggle-title">Filters</span>
-                <span class="filters-toggle-icon" id="filtersIcon">▼</span>
+            <!-- Added top controls for filters and category key -->
+            <div class="top-controls">
+                <div class="control-btn" onclick="toggleFilters()">
+                    <span class="control-btn-title">Filters</span>
+                    <span class="control-btn-icon" id="filtersIcon">▼</span>
+                </div>
+                <div class="control-btn" onclick="openCategoryKey()">
+                    <span class="control-btn-title">Category Key</span>
+                    <span class="control-btn-icon">ℹ</span>
+                </div>
             </div>
 
             <div class="filters-section" id="filtersSection">
@@ -882,6 +1012,64 @@
                 <button type="button" class="btn btn-success" onclick="addMovieSubmit()">Add Movie</button>
                 <button type="button" class="btn" onclick="closeModal()">Cancel</button>
             </form>
+        </div>
+    </div>
+
+    <!-- Added Category Key Modal -->
+    <div id="categoryKeyModal" class="modal">
+        <div class="category-key-content">
+            <span class="close" onclick="closeCategoryKey()">&times;</span>
+            <h2>Rating Category Key</h2>
+            
+            <div class="category-item">
+                <div class="category-name">Plot</div>
+                <div class="category-description">Story structure and how engaging/coherent the storyline is</div>
+            </div>
+            
+            <div class="category-item">
+                <div class="category-name">Characters</div>
+                <div class="category-description">Character development, believability, and how well actors portray their roles</div>
+            </div>
+            
+            <div class="category-item">
+                <div class="category-name">Cast</div>
+                <div class="category-description">Acting quality, chemistry between actors, and overall performances</div>
+            </div>
+            
+            <div class="category-item">
+                <div class="category-name">Cinematography</div>
+                <div class="category-description">Visual style, camera work, lighting, and overall look of the film</div>
+            </div>
+            
+            <div class="category-item">
+                <div class="category-name">Pacing</div>
+                <div class="category-description">How well the movie flows, timing of scenes, and whether it drags or rushes</div>
+            </div>
+            
+            <div class="category-item">
+                <div class="category-name">Soundtrack</div>
+                <div class="category-description">Music quality, how well it fits scenes, and emotional impact of the score</div>
+            </div>
+            
+            <div class="category-item">
+                <div class="category-name">Unpredictability</div>
+                <div class="category-description">Plot twists, surprises, and how well the movie avoids clichés</div>
+            </div>
+            
+            <div class="category-item">
+                <div class="category-name">Ending</div>
+                <div class="category-description">Satisfaction with conclusion, whether it ties up loose ends appropriately</div>
+            </div>
+            
+            <div class="category-item">
+                <div class="category-name">Re-watchability</div>
+                <div class="category-description">How likely you would want to watch the movie for multiple viewings</div>
+            </div>
+            
+            <div class="category-item">
+                <div class="category-name">Menu</div>
+                <div class="category-description">Quality and functionality of disc navigation, bonus features accessibility, and overall user interface design</div>
+            </div>
         </div>
     </div>
 
@@ -1263,6 +1451,27 @@
             
             filtersSection.classList.toggle('show');
             filtersIcon.classList.toggle('open');
+        }
+
+        function openCategoryKey() {
+            document.getElementById('categoryKeyModal').style.display = 'block';
+        }
+
+        function closeCategoryKey() {
+            document.getElementById('categoryKeyModal').style.display = 'none';
+        }
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const movieModal = document.getElementById('movieModal');
+            const categoryModal = document.getElementById('categoryKeyModal');
+            
+            if (event.target === movieModal) {
+                closeModal();
+            }
+            if (event.target === categoryModal) {
+                closeCategoryKey();
+            }
         }
 
         function saveData() {
