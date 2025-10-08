@@ -186,6 +186,40 @@
             background: rgba(245, 101, 101, 0.25);
         }
 
+        /* Added minimal delete button styling */
+        .btn-delete-minimal {
+            position: relative;
+            overflow: hidden;
+            background: transparent;
+            color: #a0aec0;
+            border: 1px solid rgba(226, 232, 240, 0.1);
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            min-width: auto;
+            width: auto;
+        }
+
+        .btn-delete-minimal:hover {
+            background: rgba(245, 101, 101, 0.15);
+            color: #fc8181;
+            border-color: rgba(245, 101, 101, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .btn-delete-minimal::before {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .btn-delete-minimal {
+                padding: 6px 10px;
+                font-size: 14px;
+            }
+        }
+
         .btn-success {
             background: rgba(72, 187, 120, 0.15);
             border: 1px solid rgba(72, 187, 120, 0.3);
@@ -1314,7 +1348,7 @@
                 movieDiv.innerHTML = `
                     <div class="movie-header">
                         <div class="movie-title">${movie.title}</div>
-                        <button class="btn btn-danger" onclick="deleteMovie(${movie.id})">Delete</button>
+                        <button class="btn-delete-minimal" onclick="deleteMovie(${movie.id})" title="Delete movie">×</button>
                     </div>
                     
                     <div class="movie-info">
