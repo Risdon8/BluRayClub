@@ -631,6 +631,129 @@
             outline: none;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
+
+        /* Added filter section styles */
+        .filters-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 25px 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .filters-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            align-items: end;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #667eea;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-input {
+            padding: 10px 14px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .filter-input:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .filter-select {
+            padding: 10px 14px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            background: white;
+            cursor: pointer;
+        }
+
+        .filter-select:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .members-checkboxes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 5px;
+        }
+
+        .member-checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 13px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .member-checkbox-label:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        .member-checkbox-label input[type="checkbox"] {
+            cursor: pointer;
+        }
+
+        /* Changed summary input to textarea */
+        .summary-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 13px;
+            font-style: italic;
+            transition: all 0.2s ease;
+            background: white;
+            min-height: 60px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .summary-textarea:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
     </style>
 </head>
 <body>
@@ -651,25 +774,62 @@
                     <button class="btn" onclick="syncToCloud()" id="syncBtn">
                         <span class="btn-icon">☁️</span>Sync Cloud
                     </button>
-                    <button class="btn" onclick="showExport()">
-                        <span class="btn-icon">📤</span>Export
-                    </button>
-                    <button class="btn" onclick="showImport()">
-                        <span class="btn-icon">📥</span>Import
-                    </button>
+                    <!-- Removed Export and Import buttons -->
+                </div>
+            </div>
+
+             <!-- Added filters section -->
+            <div class="filters-section">
+                <div class="filters-title">Filters</div>
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label class="filter-label">Search Movies</label>
+                        <input type="text" id="movieSearchFilter" class="filter-input" placeholder="Search by title..." oninput="applyFilters()">
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Filter by Year</label>
+                        <select id="yearFilter" class="filter-select" onchange="applyFilters()">
+                            <option value="">All Years</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Filter by Director</label>
+                        <select id="directorFilter" class="filter-select" onchange="applyFilters()">
+                            <option value="">All Directors</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="filter-group" style="margin-top: 20px;">
+                    <label class="filter-label">Show Members</label>
+                    <div class="members-checkboxes" id="memberFilters">
+                        <label class="member-checkbox-label">
+                            <input type="checkbox" value="James" checked onchange="applyFilters()"> James
+                        </label>
+                        <label class="member-checkbox-label">
+                            <input type="checkbox" value="Shane" checked onchange="applyFilters()"> Shane
+                        </label>
+                        <label class="member-checkbox-label">
+                            <input type="checkbox" value="Robbie" checked onchange="applyFilters()"> Robbie
+                        </label>
+                        <label class="member-checkbox-label">
+                            <input type="checkbox" value="Owen" checked onchange="applyFilters()"> Owen
+                        </label>
+                        <label class="member-checkbox-label">
+                            <input type="checkbox" value="Will" checked onchange="applyFilters()"> Will
+                        </label>
+                        <label class="member-checkbox-label">
+                            <input type="checkbox" value="Alex" checked onchange="applyFilters()"> Alex
+                        </label>
+                        <label class="member-checkbox-label">
+                            <input type="checkbox" value="Dan" checked onchange="applyFilters()"> Dan
+                        </label>
+                    </div>
                 </div>
             </div>
 
             <div id="moviesContainer"></div>
 
-            <div class="export-area" id="exportArea" style="display: none;">
-                <h3>Export/Import Data</h3>
-                <p>Copy this data to backup your reviews, or paste data here to import:</p>
-                <textarea id="exportText" class="export-text"></textarea>
-                <br><br>
-                <button class="btn btn-success" onclick="importData()">Import Data</button>
-                <button class="btn" onclick="hideExport()">Close</button>
-            </div>
+             <!-- Removed export area section -->
         </div>
     </div>
 
@@ -752,6 +912,7 @@
                     
                     if (firebaseMovies.length > 0) {
                         movies = firebaseMovies;
+                        populateFilterDropdowns();
                         renderMovies();
                     }
                     
@@ -842,13 +1003,13 @@
         }
 
         function addMovieSubmit() {
-            console.log('Add movie function called'); // Debug log
+            console.log('Add movie function called');
             
             const title = document.getElementById('movieTitle').value.trim();
             const year = document.getElementById('movieYear').value;
             const director = document.getElementById('movieDirector').value.trim();
             
-            console.log('Form values:', { title, year, director }); // Debug log
+            console.log('Form values:', { title, year, director });
             
             if (!title || !year || !director) {
                 alert('Please fill in the required fields (Title, Year, Director)');
@@ -874,23 +1035,76 @@
                 }
             };
             
-            console.log('New movie object:', newMovie); // Debug log
+            console.log('New movie object:', newMovie);
             
-            movies.push(newMovie);
+            movies.unshift(newMovie);
+            populateFilterDropdowns();
             renderMovies();
             closeModal();
             
-            // Auto-save to Firebase
             saveMovieToFirebase(newMovie);
             
-            console.log('Movie added successfully'); // Debug log
+            console.log('Movie added successfully');
+        }
+
+        function applyFilters() {
+            const searchTerm = document.getElementById('movieSearchFilter').value.toLowerCase();
+            const yearFilter = document.getElementById('yearFilter').value;
+            const directorFilter = document.getElementById('directorFilter').value;
+            
+            const selectedMembers = Array.from(document.querySelectorAll('#memberFilters input[type="checkbox"]:checked'))
+                .map(cb => cb.value);
+            
+            window.currentFilters = {
+                searchTerm,
+                yearFilter,
+                directorFilter,
+                selectedMembers
+            };
+            
+            renderMovies();
+        }
+
+        function populateFilterDropdowns() {
+            const years = [...new Set(movies.map(m => m.year))].sort((a, b) => b - a);
+            const directors = [...new Set(movies.map(m => m.director))].sort();
+            
+            const yearSelect = document.getElementById('yearFilter');
+            const directorSelect = document.getElementById('directorFilter');
+            
+            const currentYear = yearSelect.value;
+            const currentDirector = directorSelect.value;
+            
+            yearSelect.innerHTML = '<option value="">All Years</option>' + 
+                years.map(year => `<option value="${year}" ${year == currentYear ? 'selected' : ''}>${year}</option>`).join('');
+            
+            directorSelect.innerHTML = '<option value="">All Directors</option>' + 
+                directors.map(dir => `<option value="${dir}" ${dir === currentDirector ? 'selected' : ''}>${dir}</option>`).join('');
         }
 
         function renderMovies() {
             const container = document.getElementById('moviesContainer');
             container.innerHTML = '';
 
-            movies.forEach(movie => {
+            const filters = window.currentFilters || {
+                searchTerm: '',
+                yearFilter: '',
+                directorFilter: '',
+                selectedMembers: ['James', 'Shane', 'Robbie', 'Owen', 'Will', 'Alex', 'Dan']
+            };
+
+            const filteredMovies = movies.filter(movie => {
+                const matchesSearch = !filters.searchTerm || 
+                    movie.title.toLowerCase().includes(filters.searchTerm);
+                const matchesYear = !filters.yearFilter || 
+                    movie.year == filters.yearFilter;
+                const matchesDirector = !filters.directorFilter || 
+                    movie.director === filters.directorFilter;
+                
+                return matchesSearch && matchesYear && matchesDirector;
+            });
+
+            filteredMovies.forEach(movie => {
                 const movieDiv = document.createElement('div');
                 movieDiv.className = 'movie-card';
                 movieDiv.innerHTML = `
@@ -923,7 +1137,7 @@
                     </div>
 
                     <div class="reviewers-grid">
-                        ${['James', 'Shane', 'Robbie', 'Owen', 'Will', 'Alex', 'Dan'].map(reviewer => `
+                        ${filters.selectedMembers.map(reviewer => `
                             <div class="reviewer-card">
                                 <div class="reviewer-name">${reviewer}</div>
                                 ${createReviewerInputs(movie.id, reviewer, movie.reviews[reviewer])}
@@ -955,9 +1169,8 @@
                                    style="background: transparent; border: none; color: white; width: 40px; text-align: center;">
                 </div>
                 
-                <input type="text" class="summary-input" placeholder="3-word summary..." 
-                       value="${review.summary || ''}"
-                       onchange="updateRating(${movieId}, '${reviewer}', 'summary', this.value)">
+                <textarea class="summary-textarea" placeholder="Summary..." 
+                       onchange="updateRating(${movieId}, '${reviewer}', 'summary', this.value)">${review.summary || ''}</textarea>
             `;
         }
 
@@ -991,12 +1204,12 @@
             if (confirm('Are you sure you want to delete this movie?')) {
                 const movie = movies.find(m => m.id === movieId);
                 
-                // Delete from Firebase first
                 if (movie) {
                     deleteMovieFromFirebase(movie);
                 }
                 
                 movies = movies.filter(m => m.id !== movieId);
+                populateFilterDropdowns();
                 renderMovies();
             }
         }
@@ -1023,7 +1236,8 @@
                 }
             };
             
-            movies.push(newMovie);
+            movies.unshift(newMovie);
+            populateFilterDropdowns();
             renderMovies();
             closeModal();
         });
@@ -1032,34 +1246,13 @@
             syncToCloud();
         }
 
-        function showExport() {
-            document.getElementById('exportText').value = JSON.stringify(movies, null, 2);
-            document.getElementById('exportArea').style.display = 'block';
-        }
 
-        function hideExport() {
-            document.getElementById('exportArea').style.display = 'none';
-        }
-
-        function importData() {
-            try {
-                const importedData = JSON.parse(document.getElementById('exportText').value);
-                movies = importedData;
-                renderMovies();
-                alert('Data imported successfully!');
-                hideExport();
-            } catch (error) {
-                alert('Error importing data. Please check the format.');
-            }
-        }
-
-        function showImport() {
-            document.getElementById('exportText').value = '';
-            document.getElementById('exportArea').style.display = 'block';
-        }
-
-        // Initialize
+        window.addEventListener('firebaseLoaded', () => {
+            initializeFirebase();
+        });
+        
         renderMovies();
+        populateFilterDropdowns();
     </script>
 </body>
 </html>
