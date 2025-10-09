@@ -312,6 +312,19 @@
             border-bottom: 1px solid rgba(226, 232, 240, 0.1);
         }
 
+        /* Ensure settings button stays on right side on mobile */
+        @media (max-width: 768px) {
+            .movie-header {
+                flex-direction: row; /* Keep horizontal layout on mobile */
+                text-align: left;
+                gap: 12px;
+            }
+            
+            .btn-settings {
+                margin-left: auto; /* Push to right side */
+            }
+        }
+
         .movie-title {
             /* Elegant title typography */
             font-family: 'Playfair Display', serif;
@@ -863,9 +876,13 @@
             }
 
             .movie-header {
-                flex-direction: column;
-                text-align: center;
+                flex-direction: row; /* Keep horizontal layout on mobile */
+                text-align: left;
                 gap: 12px;
+            }
+            
+            .btn-settings {
+                margin-left: auto; /* Push to right side */
             }
 
             .movie-info {
@@ -1022,9 +1039,11 @@
 
             <div class="filters-section" id="filtersSection">
                 <div class="filters-grid">
-                    <div class="filter-group">
-                        <label class="filter-label">Search Movies</label>
-                        <input type="text" id="movieSearchFilter" class="filter-input" placeholder="Search by title..." oninput="applyFilters()">
+                    <div class="filter-group" style="grid-column: 1 / -1;">
+                        <label class="filter-label">Select Movies to View</label>
+                        <div class="members-checkboxes" id="movieCheckboxes">
+                             Movie checkboxes will be populated dynamically 
+                        </div>
                     </div>
                     <div class="filter-group">
                         <label class="filter-label">Filter by Year</label>
@@ -1400,7 +1419,8 @@
         }
 
         function applyFilters() {
-            const searchTerm = document.getElementById('movieSearchFilter').value.toLowerCase();
+            const selectedMovieIds = Array.from(document.querySelectorAll('#movieCheckboxes input[type="checkbox"]:checked'))
+                .map(cb => parseInt(cb.value));
             const yearFilter = document.getElementById('yearFilter').value;
             const directorFilter = document.getElementById('directorFilter').value;
             
@@ -1408,13 +1428,24 @@
                 .map(cb => cb.value);
             
             window.currentFilters = {
-                searchTerm,
+                selectedMovieIds,
                 yearFilter,
                 directorFilter,
                 selectedMembers
             };
             
             renderMovies();
+        }
+
+        function populateMovieCheckboxes() {
+            const movieCheckboxesContainer = document.getElementById('movieCheckboxes');
+            const sortedMovies = [...movies].sort((a, b) => b.id - a.id); // Newest first
+            
+            movieCheckboxesContainer.innerHTML = sortedMovies.map(movie => `
+                <label class="member-checkbox-label">
+                    <input type="checkbox" value="${movie.id}" checked onchange="applyFilters()"> ${movie.title}
+                </label>
+            `).join('');
         }
 
         function populateFilterDropdowns() {
@@ -1432,6 +1463,8 @@
             
             directorSelect.innerHTML = '<option value="">All Directors</option>' + 
                 directors.map(dir => `<option value="${dir}" ${dir === currentDirector ? 'selected' : ''}>${dir}</option>`).join('');
+            
+            populateMovieCheckboxes();
         }
 
         function renderMovies() {
@@ -1439,21 +1472,20 @@
             container.innerHTML = '';
 
             const filters = window.currentFilters || {
-                searchTerm: '',
+                selectedMovieIds: movies.map(m => m.id),
                 yearFilter: '',
                 directorFilter: '',
                 selectedMembers: ['James', 'Shane', 'Robbie', 'Owen', 'Will', 'Alex', 'Dan']
             };
 
             const filteredMovies = movies.filter(movie => {
-                const matchesSearch = !filters.searchTerm || 
-                    movie.title.toLowerCase().includes(filters.searchTerm);
+                const matchesMovieSelection = filters.selectedMovieIds.includes(movie.id);
                 const matchesYear = !filters.yearFilter || 
                     movie.year == filters.yearFilter;
                 const matchesDirector = !filters.directorFilter || 
                     movie.director === filters.directorFilter;
                 
-                return matchesSearch && matchesYear && matchesDirector;
+                return matchesMovieSelection && matchesYear && matchesDirector;
             });
 
             filteredMovies.sort((a, b) => b.id - a.id);
